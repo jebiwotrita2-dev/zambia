@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Airtel x Starlink — Internet Plans</title>
+<style>
+  :root{
+    --red-deep:#7a0f16;
+    --red-mid:#a3141c;
+    --red-bright:#c81e28;
+    --gold:#f5c14a;
+    --orange:#f28d2d;
+    --card-bg:#fdfaf5;
+    --card-bg-alt:#ffffff;
+    --ink:#3a1013;
+    --soft-shadow:0 14px 32px rgba(84, 10, 15, 0.2);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  body{
+    font-family:'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background:
+      radial-gradient(circle at 15% 0%, rgba(255,255,255,0.08), transparent 40%),
+      linear-gradient(160deg, var(--red-mid) 0%, var(--red-deep) 55%, #5c0b10 100%);
+    color:#fff;
+    min-height:100svh;
+    width:100%;
+    overflow-x:hidden;
+  }
+  .phone{
+    width:100%;
+    max-width:480px;
+    min-height:100svh;
+    margin:0 auto;
+    position:relative;
+    padding-top:env(safe-area-inset-top);
+    padding-bottom:env(safe-area-inset-bottom);
+    padding-left:env(safe-area-inset-left);
+    padding-right:env(safe-area-inset-right);
+  }
+
+  /* Header */
+  header{
+    padding:18px 12px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .airtel-logo-img{
+    height:34px;
+    width:auto;
+    display:block;
+    filter:brightness(1.15) drop-shadow(0 4px 10px rgba(0,0,0,0.18));
+    background:rgba(255,255,255,0.07);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:12px;
+    padding:5px 10px;
+  }
+  .collab{
+    text-align:center;
+    flex:1;
+    min-width:0;
+  }
+  .collab .eyebrow{
+    font-size:clamp(7px, 2vw, 9px);
+    letter-spacing:1px;
+    color:rgba(255,255,255,0.75);
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .collab .starlink-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    margin-top:2px;
+    flex-wrap:wrap;
+  }
+  .collab .starlink-row .big{
+    font-weight:800;
+    font-size:clamp(11px, 3.6vw, 15px);
+    letter-spacing:0.5px;
+  }
+  .collab .starlink-row .sat{font-size:13px;}
+  .collab .starlink-row .brand-name{
+    font-weight:700;
+    font-size:clamp(11px, 3.6vw, 15px);
+  }
+  .menu-btn{
+    width:38px;height:38px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .menu-btn span{display:block;width:16px;height:2px;background:#fff;position:relative;}
+  .menu-btn span::before,.menu-btn span::after{
+    content:"";position:absolute;left:0;width:16px;height:2px;background:#fff;
+  }
+  .menu-btn span::before{top:-5px;}
+  .menu-btn span::after{top:5px;}
+
+  /* Hero */
+  .hero{
+    text-align:center;
+    padding:0 20px 12px;
+    margin-top:-2px;
+  }
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+    border:1px solid rgba(255,255,255,0.22);
+    padding:8px 16px;
+    border-radius:999px;
+    font-size:12.5px;
+    font-weight:700;
+    color:#f9efdb;
+    margin-bottom:12px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .pill .bars{color:var(--gold);}
+  h1{
+    font-size:clamp(32px, 9vw, 50px);
+    line-height:0.96;
+    font-weight:800;
+    letter-spacing:-1.2px;
+    max-width:420px;
+    margin:0 auto;
+  }
+  h1 .accent{
+    color:var(--gold);
+    display:block;
+    text-shadow:0 8px 24px rgba(245, 193, 74, 0.18);
+  }
+  .sub{
+    margin-top:10px;
+    font-size:14px;
+    line-height:1.55;
+    color:rgba(255,255,255,0.82);
+    max-width:380px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  /* Plans grid */
+  .plans{
+    padding:0 14px 18px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:-2px;
+  }
+  .plan{
+    background:var(--card-bg-alt);
+    border-radius:18px;
+    padding:18px 14px 16px;
+    color:#2a2a2a;
+    position:relative;
+    box-shadow:var(--soft-shadow);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    border:2px solid transparent;
+    transform:translateY(-2px);
+  }
+  .plan.highlight{
+    border-color:rgba(245,193,74,0.9);
+    background:linear-gradient(180deg,#fffdf8,#fff6df);
+    box-shadow:0 18px 30px rgba(86, 18, 18, 0.15), 0 0 0 1px rgba(245,193,74,0.12);
+  }
+  .plan.full{
+    grid-column:1 / -1;
+  }
+  .badge{
+    position:absolute;
+    top:-13px;
+    left:14px;
+    background:var(--orange);
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    padding:5px 12px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.25);
+  }
+  .badge.crown{background:linear-gradient(90deg,#f2b632,#e8942c);}
+  .network{
+    font-size:12px;
+    color:#9b9b9b;
+    font-weight:600;
+    letter-spacing:0.5px;
+    margin-top:4px;
+  }
+  .data-amount{
+    display:flex;
+    align-items:flex-start;
+    gap:2px;
+    margin:6px 0 2px;
+  }
+  .data-amount .num{
+    font-size:clamp(32px, 10vw, 44px);
+    font-weight:800;
+    color:var(--red-bright);
+    line-height:1;
+    font-style:italic;
+  }
+  .data-amount .unit{
+    font-size:15px;
+    font-weight:700;
+    color:var(--red-bright);
+    margin-top:6px;
+  }
+  .validity{
+    font-size:13px;
+    color:#8a8a8a;
+    font-weight:500;
+    margin-bottom:10px;
+  }
+  .divider{
+    width:100%;
+    height:1px;
+    background:#efefef;
+    margin-bottom:12px;
+  }
+  .price{
+    font-size:24px;
+    font-weight:800;
+    color:#1a1a1a;
+    margin-bottom:12px;
+  }
+  .price sup{
+    font-size:14px;
+    font-weight:700;
+    margin-right:2px;
+    position:relative;
+    top:-2px;
+  }
+  .choose-btn{
+    width:100%;
+    min-height:44px;
+    background:linear-gradient(180deg, var(--red-bright), #ac1220);
+    color:#fff;
+    border:none;
+    border-radius:18px;
+    padding:12px 6px;
+    font-size:clamp(11px, 3.2vw, 12.5px);
+    font-weight:700;
+    letter-spacing:0.4px;
+    cursor:pointer;
+    box-shadow:0 8px 18px rgba(200,30,40,0.28);
+    transition:transform .15s ease, box-shadow .15s ease;
+    touch-action:manipulation;
+  }
+  .choose-btn:active{transform:translateY(1px) scale(0.98);box-shadow:0 4px 10px rgba(200,30,40,0.4);}
+  @media (hover:hover){
+    .choose-btn:hover{transform:translateY(-2px);box-shadow:0 10px 18px rgba(200,30,40,0.5);}
+  }
+  .plan.full .data-amount .num{font-size:48px;}
+
+  /* Footer strip */
+  .footer-strip{
+    margin:6px 14px 18px;
+    background:rgba(0,0,0,0.22);
+    border-radius:14px;
+    padding:16px 10px;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    flex-wrap:wrap;
+    row-gap:12px;
+    font-size:12px;
+    font-weight:600;
+    color:#f4e9d8;
+    border:1px solid rgba(255,255,255,0.12);
+  }
+  .footer-strip .item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+  }
+  .footer-strip .sep{
+    color:rgba(255,255,255,0.3);
+  }
+  .copyright{
+    text-align:center;
+    font-size:11px;
+    color:rgba(255,255,255,0.5);
+    padding:8px 20px 30px;
+  }
+
+  @media (max-width:340px){
+    .plans{gap:10px;padding-left:10px;padding-right:10px;}
+    .plan{padding:16px 10px 14px;}
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <header>
+    <div class="brand">
+      <img src="assets/img/logo.svg" alt="Airtel logo" class="airtel-logo-img">
+    </div>
+    <div class="collab">
+      <div class="eyebrow">In collaboration with</div>
+      <div class="starlink-row">
+        <span class="big">STARLINK</span>
+        <span class="sat">🛰️</span>
+        <span class="brand-name">Starlink</span>
+      </div>
+    </div>
+    <div class="menu-btn"><span></span></div>
+  </header>
+
+  <section class="hero">
+    <span class="pill"><span class="bars">📶</span> Internet Plans</span>
+    <h1>Stay<br>Connected<br><span class="accent">Without Limits</span></h1>
+    <p class="sub">Choose a plan. You will be redirected to the Airtel Lite login page to complete payment.</p>
+  </section>
+
+  <section class="plans">
+
+    <div class="plan highlight">
+      <div class="network">5G</div>
+      <div class="data-amount"><span class="num">5</span><span class="unit">GB</span></div>
+      <div class="validity">Valid for 1 day</div>
+      <div class="divider"></div>
+      <div class="price">272 <sup>MK</sup></div>
+      <button class="choose-btn" onclick="location.href='trial.html?plan=5gb&price=272'">CHOOSE THIS PLAN</button>
+    </div>
+
+    <div class="plan">
+      <div class="network">5G</div>
+      <div class="data-amount"><span class="num">10</span><span class="unit">GB</span></div>
+      <div class="validity">Valid for 3 days</div>
+      <div class="divider"></div>
+      <div class="price">544 <sup>MK</sup></div>
+      <button class="choose-btn" onclick="location.href='trial.html?plan=10gb&price=544'">CHOOSE THIS PLAN</button>
+    </div>
+
+    <div class="plan">
+      <div class="network">5G</div>
+      <div class="data-amount"><span class="num">20</span><span class="unit">GB</span></div>
+      <div class="validity">Valid for 7 days</div>
+      <div class="divider"></div>
+      <div class="price">1,105 <sup>MK</sup></div>
+      <button class="choose-btn" onclick="location.href='trial.html?plan=20gb&price=1105'">CHOOSE THIS PLAN</button>
+    </div>
+
+    <div class="plan">
+      <div class="badge">⚡ Popular</div>
+      <div class="network">5G</div>
+      <div class="data-amount"><span class="num">40</span><span class="unit">GB</span></div>
+      <div class="validity">Valid for 7 days</div>
+      <div class="divider"></div>
+      <div class="price">2,074 <sup>MK</sup></div>
+      <button class="choose-btn" onclick="location.href='trial.html?plan=40gb&price=2074'">CHOOSE THIS PLAN</button>
+    </div>
+
+    <div class="plan">
+      <div class="badge">💎 Pro</div>
+      <div class="network">5G+</div>
+      <div class="data-amount"><span class="num">80</span><span class="unit">GB</span></div>
+      <div class="validity">Valid for 21 days</div>
+      <div class="divider"></div>
+      <div class="price">4,165 <sup>MK</sup></div>
+      <button class="choose-btn" onclick="location.href='trial.html?plan=80gb&price=4165'">CHOOSE THIS PLAN</button>
+    </div>
+
+    <div class="plan">
+      <div class="badge">🚀 Max</div>
+      <div class="network">5G+</div>
+      <div class="data-amount"><span class="num">120</span><span class="unit">GB</span></div>
+      <div class="validity">Valid for 30 days</div>
+      <div class="divider"></div>
+      <div class="price">7,650 <sup>MK</sup></div>
+      <button class="choose-btn" onclick="location.href='trial.html?plan=120gb&price=7650'">CHOOSE THIS PLAN</button>
+    </div>
+
+    <div class="plan full highlight">
+      <div class="badge crown">👑 Unlimited</div>
+      <div class="network">5G+</div>
+      <div class="data-amount"><span class="num">∞</span></div>
+      <div class="validity">Valid for 30 days</div>
+      <div class="divider"></div>
+      <div class="price">10,438 <sup>MK</sup></div>
+      <button class="choose-btn" onclick="location.href='trial.html?plan=illimite&price=10438'">CHOOSE THIS PLAN</button>
+    </div>
+
+  </section>
+
+  <div class="footer-strip">
+    <div class="item">⚡ Instant activation</div>
+    <span class="sep">|</span>
+    <div class="item">🔒 Secure payment</div>
+    <span class="sep">|</span>
+    <div class="item">📞 24/7 support</div>
+  </div>
+
+  <p class="copyright">© 2026 Airtel Congo. All rights reserved.</p>
+
+</div>
+</body>
+</html>

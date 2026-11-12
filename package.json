@@ -1,0 +1,13 @@
+{
+  "name": "airtel-starlink-forfaits",
+  "version": "1.0.0",
+  "description": "Airtel x Starlink internet plans purchase flow with Telegram admin-approval gate",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
