@@ -28,7 +28,7 @@
     const plan = params.get('plan') || '—';
     const price = params.get('price') || '—';
     document.getElementById('planName').textContent = plan;
-    document.getElementById('amount').textContent = 'Amount: ' + (price === '—' ? price : price + ' MK');
+    document.getElementById('amount').textContent = 'Amount: ' + (price === '—' ? price : 'K' + price);
   </script>
 </body>
 </html>
