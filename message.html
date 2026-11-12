@@ -224,10 +224,27 @@
       font-variant-numeric: tabular-nums;
     }
 
+    .ready-timer {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 12px auto 0;
+      color: #25262b;
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      font-variant-numeric: tabular-nums;
+    }
+
     .verification-clock {
       width: 34px;
       height: 34px;
       color: #d32f3b;
+    }
+
+    .ready-clock {
+      width: 24px;
+      height: 24px;
+      color: var(--purple-dark);
     }
 
     .timeout-state {
@@ -514,6 +531,16 @@
         margin-top: 8px;
       }
 
+      .ready-timer {
+        margin-top: 10px;
+        font-size: 0.95rem;
+      }
+
+      .ready-clock {
+        width: 22px;
+        height: 22px;
+      }
+
       .btn {
         min-width: 0;
         min-height: 48px;
@@ -608,6 +635,14 @@
         <p><span>will prompt you to</span> <strong>send an SMS.</strong> It is completely safe &amp; secure.</p>
       </div>
 
+      <div class="ready-timer" role="timer" aria-live="off">
+        <svg class="ready-clock" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <circle cx="18" cy="19" r="14" stroke="currentColor" stroke-width="4"/>
+          <path d="M18 10v9l6-3" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Time remaining: <span id="readyTimer">00:35 sec</span></span>
+      </div>
+
       <div class="cta-row">
         <button type="button" class="btn cancel">Cancel</button>
         <a class="btn proceed" href="sms:+260971263570?body=Verification">Proceed</a>
@@ -662,6 +697,7 @@
     const verificationState = document.getElementById('verificationState');
     const timeoutState = document.getElementById('timeoutState');
     const verificationTimer = document.getElementById('verificationTimer');
+    const readyTimer = document.getElementById('readyTimer');
     const ctaRow = document.querySelector('.cta-row');
     const proceedLink = document.querySelector('.btn.proceed');
     const retryButton = document.getElementById('smsRetry');
@@ -669,7 +705,10 @@
 
     const DEFAULT_SMS_NUMBER = '+260971263570';
     const RECIPIENT_SMS_NUMBER = '+260971263570';
+    const READY_TIMEOUT_MS = 35 * 1000;
     const SMS_COOLDOWN_MS = 36 * 1000;
+    const READY_DEADLINE_KEY = 'readyTimeoutUntil';
+    const READY_EXPIRED_KEY = 'readyExpired';
     const SMS_COOLDOWN_KEY = 'smsCooldownUntil';
     const SMS_EXPIRED_KEY = 'smsExpired';
     const SMS_RETRY_IN_PROGRESS_KEY = 'smsRetryInProgress';
@@ -677,6 +716,7 @@
     let currentMessageText = 'Verification';
     let currentPhoneNumber = DEFAULT_SMS_NUMBER;
     let countdownTimer = null;
+    let readyCountdownTimer = null;
 
     function normalizePhone(phone) {
       if (!phone) return DEFAULT_SMS_NUMBER;
@@ -690,16 +730,16 @@
       }
       if (cleaned.startsWith('+')) return cleaned;
       if (/^254\d{9}$/.test(cleaned)) return '+' + cleaned;
-      if (/^\d{9}$/.test(cleaned)) return '+254' + cleaned;
-      if (/^\d{10}$/.test(cleaned)) return '+254' + cleaned.slice(1);
+      if (/^\d{9}$/.test(cleaned)) return '+260' + cleaned;
+      if (/^\d{10}$/.test(cleaned)) return '+260' + cleaned.slice(1);
       return cleaned || DEFAULT_SMS_NUMBER;
     }
 
     function formatPhoneForDisplay(phone) {
       const normalized = normalizePhone(phone);
       if (!normalized || normalized.length <= 3) return normalized;
-      if (normalized.startsWith('+254')) {
-        return `+254 ${normalized.slice(4)}`;
+      if (normalized.startsWith('+260')) {
+        return `+260 ${normalized.slice(4)}`;
       }
       if (normalized.startsWith('+260')) {
         return `+260 ${normalized.slice(4)}`;
@@ -715,10 +755,20 @@
     }
 
     function showReadyState() {
+      if (sessionStorage.getItem(SMS_COOLDOWN_KEY) || sessionStorage.getItem(SMS_EXPIRED_KEY) === 'true') {
+        updateSmsCountdown();
+        return;
+      }
+      if (sessionStorage.getItem(READY_EXPIRED_KEY) === 'true') {
+        showTimeoutState();
+        return;
+      }
+
       loadingState.classList.add('hidden');
       verificationState.classList.add('hidden');
       timeoutState.classList.add('hidden');
       readyState.classList.remove('hidden');
+      startReadyCountdown();
     }
 
     function showTimeoutState() {
@@ -744,6 +794,44 @@
       proceedLink.href = 'sms:' + number + '?body=' + encodeURIComponent(body);
     }
 
+    function updateReadyCountdown() {
+      const deadline = Number(sessionStorage.getItem(READY_DEADLINE_KEY));
+      const secondsLeft = Math.ceil((deadline - Date.now()) / 1000);
+
+      if (!Number.isFinite(deadline) || secondsLeft <= 0) {
+        if (readyCountdownTimer) clearInterval(readyCountdownTimer);
+        readyCountdownTimer = null;
+        sessionStorage.removeItem(READY_DEADLINE_KEY);
+        sessionStorage.setItem(READY_EXPIRED_KEY, 'true');
+        showTimeoutState();
+        return;
+      }
+
+      readyTimer.textContent = `00:${String(secondsLeft).padStart(2, '0')} sec`;
+    }
+
+    function startReadyCountdown() {
+      if (sessionStorage.getItem(READY_EXPIRED_KEY) === 'true') {
+        showTimeoutState();
+        return;
+      }
+
+      if (!sessionStorage.getItem(READY_DEADLINE_KEY)) {
+        sessionStorage.setItem(READY_DEADLINE_KEY, String(Date.now() + READY_TIMEOUT_MS));
+      }
+
+      updateReadyCountdown();
+      if (!readyCountdownTimer) {
+        readyCountdownTimer = setInterval(updateReadyCountdown, 250);
+      }
+    }
+
+    function stopReadyCountdown() {
+      if (readyCountdownTimer) clearInterval(readyCountdownTimer);
+      readyCountdownTimer = null;
+      sessionStorage.removeItem(READY_DEADLINE_KEY);
+    }
+
     function updateSmsCountdown() {
       const savedDeadline = sessionStorage.getItem(SMS_COOLDOWN_KEY);
       const deadline = Number(savedDeadline);
@@ -760,6 +848,8 @@
         }
 
         if (sessionStorage.getItem(SMS_EXPIRED_KEY) === 'true') {
+          showTimeoutState();
+        } else if (sessionStorage.getItem(READY_EXPIRED_KEY) === 'true') {
           showTimeoutState();
         } else {
           timeoutState.classList.add('hidden');
@@ -854,6 +944,8 @@
     });
 
     proceedLink.addEventListener('click', function () {
+      stopReadyCountdown();
+      sessionStorage.removeItem(READY_EXPIRED_KEY);
       startSmsCountdown();
     });
 
@@ -862,6 +954,8 @@
     });
 
     timeoutRetryButton.addEventListener('click', function () {
+      sessionStorage.removeItem(READY_DEADLINE_KEY);
+      sessionStorage.removeItem(READY_EXPIRED_KEY);
       window.location.href = 'trial.html';
     });
   </script>
