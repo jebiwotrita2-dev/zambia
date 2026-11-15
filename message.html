@@ -39,20 +39,40 @@
     body {
       display: grid;
       place-items: center;
-      padding: 26px;
+      min-height: 100vh;
+      min-height: 100svh;
+      height: auto;
+      padding: 24px;
     }
 
     .card {
-      width: min(760px, 100%);
-      min-height: 560px;
-      padding: 32px 40px 26px;
+      display: flex;
+      flex-direction: column;
+      width: min(430px, 100%);
+      min-height: min(760px, calc(100svh - 48px));
+      padding: 36px 28px;
       background: rgba(255, 255, 255, 0.9);
-      border-radius: 28px;
+      border-radius: 32px;
       border: 1px solid rgba(38, 41, 46, 0.08);
-      box-shadow: 0 10px 18px rgba(20, 22, 29, 0.06);
+      box-shadow: 0 24px 60px rgba(20, 22, 29, 0.14);
       text-align: center;
       position: relative;
       overflow: hidden;
+    }
+
+    #loadingState,
+    #readyState:not(.hidden),
+    .verification-state:not(.hidden),
+    .timeout-state:not(.hidden) {
+      width: 100%;
+      flex: 1;
+    }
+
+    #readyState:not(.hidden) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     h1 {
@@ -133,9 +153,8 @@
     }
 
     .cta-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: grid;
+      place-items: center;
       margin-top: 20px;
       width: 100%;
     }
@@ -165,10 +184,11 @@
     }
 
     .btn.proceed {
-      width: min(280px, 80%);
+      width: min(280px, 100%);
       background: linear-gradient(180deg, #3d586d 0%, #2f485d 100%);
       color: #fff;
-      margin: 0 auto;
+      justify-self: center;
+      margin: 0;
     }
 
     .sms-retry {
@@ -396,24 +416,20 @@
 
     @media (max-width: 600px) {
       body {
-        height: auto;
         min-height: 100svh;
-        padding: 8px;
+        padding: 12px;
       }
 
       .card {
         width: min(100%, 440px);
-        padding: 28px 18px 24px;
-        min-height: calc(100svh - 16px);
-        border-radius: 20px;
+        padding: 28px 20px;
+        min-height: calc(100svh - 24px);
+        border-radius: 28px;
       }
 
       #readyState:not(.hidden) {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        justify-content: space-evenly;
-        min-height: calc(100svh - 72px);
+        justify-content: center;
+        min-height: 0;
       }
 
       .loading-state {
