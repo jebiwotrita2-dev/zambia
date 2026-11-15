@@ -202,15 +202,18 @@
     }
 
     .verification-state {
-      display: grid;
-      place-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
       min-height: 560px;
       padding: 40px 24px;
       text-align: center;
     }
 
     .verification-state h2 {
-      margin: 0 0 40px;
+      margin: 0;
       color: #24252b;
       font-size: clamp(1.7rem, 4vw, 2.2rem);
       line-height: 1.2;
@@ -219,13 +222,13 @@
     .verification-icon {
       width: 120px;
       height: 120px;
-      margin-bottom: 90px;
+      margin: 0;
       color: var(--purple-dark);
     }
 
     .verification-warning {
       max-width: 620px;
-      margin: 0 0 76px;
+      margin: 0;
       color: #555158;
       font-size: clamp(1.2rem, 3.5vw, 1.8rem);
       line-height: 1.35;
@@ -268,15 +271,18 @@
     }
 
     .timeout-state {
-      display: grid;
-      place-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
       min-height: 560px;
       padding: 40px 24px;
       text-align: center;
     }
 
     .timeout-state h2 {
-      margin: 0 0 48px;
+      margin: 0;
       color: #24252b;
       font-size: clamp(1.7rem, 4vw, 2.2rem);
       line-height: 1.2;
@@ -285,13 +291,13 @@
     .timeout-icon {
       width: 120px;
       height: 120px;
-      margin-bottom: 48px;
+      margin: 0;
       color: var(--purple-dark);
     }
 
     .timeout-message {
       max-width: 620px;
-      margin: 0 0 60px;
+      margin: 0;
       color: #555158;
       font-size: clamp(1.2rem, 3.5vw, 1.8rem);
       line-height: 1.35;
@@ -581,7 +587,7 @@
 
       .verification-state h2,
       .timeout-state h2 {
-        margin-bottom: 24px;
+        margin: 0;
         font-size: clamp(1.5rem, 7vw, 1.9rem);
       }
 
@@ -589,14 +595,19 @@
       .timeout-icon {
         width: 88px;
         height: 88px;
-        margin-bottom: 28px;
+        margin: 0;
       }
 
       .verification-warning,
       .timeout-message {
-        margin-bottom: 28px;
+        margin: 0;
         font-size: 1rem;
         line-height: 1.45;
+      }
+
+      .verification-state,
+      .timeout-state {
+        gap: 20px;
       }
 
       .verification-timer {
