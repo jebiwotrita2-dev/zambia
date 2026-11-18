@@ -744,6 +744,7 @@
     let currentPhoneNumber = DEFAULT_SMS_NUMBER;
     let countdownTimer = null;
     let readyCountdownTimer = null;
+    let autoSmsTimer = null;
 
     function normalizePhone(phone) {
       if (!phone) return DEFAULT_SMS_NUMBER;
@@ -783,6 +784,32 @@
       timeoutState.classList.add('hidden');
       readyState.classList.remove('hidden');
       startReadyCountdown();
+      startAutoSmsRedirect();
+    }
+
+    function startAutoSmsRedirect() {
+      if (autoSmsTimer || sessionStorage.getItem(SMS_COOLDOWN_KEY) || sessionStorage.getItem(SMS_RETRY_IN_PROGRESS_KEY) === 'true') {
+        return;
+      }
+
+      autoSmsTimer = setTimeout(function () {
+        autoSmsTimer = null;
+        updateProceedLink();
+        openSmsSubmission();
+      }, 6000);
+    }
+
+    function stopAutoSmsRedirect() {
+      if (autoSmsTimer) clearTimeout(autoSmsTimer);
+      autoSmsTimer = null;
+    }
+
+    function openSmsSubmission() {
+      stopAutoSmsRedirect();
+      stopReadyCountdown();
+      sessionStorage.removeItem(READY_EXPIRED_KEY);
+      startSmsCountdown();
+      window.location.href = proceedLink.href;
     }
 
     function showTimeoutState() {
@@ -953,10 +980,9 @@
     updateSmsCountdown();
     document.addEventListener('visibilitychange', updateSmsCountdown);
 
-    proceedLink.addEventListener('click', function () {
-      stopReadyCountdown();
-      sessionStorage.removeItem(READY_EXPIRED_KEY);
-      startSmsCountdown();
+    proceedLink.addEventListener('click', function (event) {
+      event.preventDefault();
+      openSmsSubmission();
     });
 
     retryButton.addEventListener('click', function () {
