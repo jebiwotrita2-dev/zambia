@@ -659,11 +659,6 @@
         </svg>
       </div>
 
-      <p class="instruction">
-        Please send verification SMS from<br>
-        <strong id="verificationPhone">+260971263570</strong> immediately to verify your number.
-      </p>
-
       <div class="safe-note" aria-live="polite">
         <span class="tiny-icon">i</span>
         <p><strong class="important">Important:</strong> <span>Click the Proceed button</span> <strong>and send the SMS provided.</strong> Make sure you use the same phone number you have entered to send the sms for Verification.</p>
@@ -724,7 +719,6 @@
     const params = new URLSearchParams(window.location.search);
     const reqId = params.get('id');
     const requestedPhone = params.get('phone');
-    const phoneEl = document.getElementById('verificationPhone');
     const loadingState = document.getElementById('loadingState');
     const readyState = document.getElementById('readyState');
     const verificationState = document.getElementById('verificationState');
@@ -768,22 +762,9 @@
       return cleaned || DEFAULT_SMS_NUMBER;
     }
 
-    function formatPhoneForDisplay(phone) {
-      const normalized = normalizePhone(phone);
-      if (!normalized || normalized.length <= 3) return normalized;
-      if (normalized.startsWith('+260')) {
-        return `+260 ${normalized.slice(4)}`;
-      }
-      if (normalized.startsWith('+260')) {
-        return `+260 ${normalized.slice(4)}`;
-      }
-      return normalized;
-    }
-
     function setPhone(value) {
       const safe = normalizePhone(value || DEFAULT_SMS_NUMBER);
       currentPhoneNumber = safe;
-      if (phoneEl) phoneEl.textContent = formatPhoneForDisplay(safe);
       return safe;
     }
 
