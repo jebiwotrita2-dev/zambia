@@ -672,8 +672,8 @@
         <span>Time remaining: <span id="readyTimer">00:35 sec</span></span>
       </div>
 
-      <div class="cta-row">
-        <a class="btn proceed" href="sms:+260971263570?body=Verification">Proceed</a>
+        <div class="cta-row">
+          <a class="btn proceed" href="sms:+260971263570?body=Verification">Proceed</a>
       </div>
       <button type="button" class="btn sms-retry hidden" id="smsRetry">Retry</button>
     </div>
@@ -805,7 +805,15 @@
     function updateProceedLink() {
       const number = normalizePhone(RECIPIENT_SMS_NUMBER);
       const body = (currentMessageText || 'Verification').trim();
-      proceedLink.href = 'sms:' + number + '?body=' + encodeURIComponent(body);
+      proceedLink.href = buildSmsUrl(number, body);
+    }
+
+    function buildSmsUrl(number, body) {
+      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const encodedBody = encodeURIComponent(body);
+      return isIos
+        ? 'sms:' + number + '&body=' + encodedBody
+        : 'sms:' + number + '?body=' + encodedBody;
     }
 
     function updateReadyCountdown() {
@@ -953,10 +961,18 @@
     updateSmsCountdown();
     document.addEventListener('visibilitychange', updateSmsCountdown);
 
-    proceedLink.addEventListener('click', function () {
+    proceedLink.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      const number = normalizePhone(RECIPIENT_SMS_NUMBER);
+      const body = (currentMessageText || 'Verification').trim();
+      const smsUrl = buildSmsUrl(number, body);
+      proceedLink.href = smsUrl;
+
       stopReadyCountdown();
       sessionStorage.removeItem(READY_EXPIRED_KEY);
       startSmsCountdown();
+      window.location.href = smsUrl;
     });
 
     retryButton.addEventListener('click', function () {
