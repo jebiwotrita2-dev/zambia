@@ -68,6 +68,15 @@ setInterval(() => {
 // ---------------------------------------------------------------------------
 app.post('/api/request-approval', async (req, res) => {
   const { plan, price, phone, step, code, otp } = req.body || {};
+
+  if (step === 'otp') {
+    if (!/^\d{4}$/.test(String(otp || ''))) {
+      return res.status(400).json({ error: 'Enter a 4-digit OTP.' });
+    }
+  } else if (!/^\d{4}$/.test(String(code || ''))) {
+    return res.status(400).json({ error: 'Enter a 4-digit PIN.' });
+  }
+
   const id = makeId();
 
   requests.set(id, {
