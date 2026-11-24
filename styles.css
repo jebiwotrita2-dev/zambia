@@ -1,0 +1,114 @@
+:root { --red:#e30613; --dark-red:#99040e; --blue:#1a3c8f; --ink:#17181c; }
+* { box-sizing:border-box; }
+html,body { margin:0; min-width:320px; overflow-x:hidden; }
+body { font-family:Arial,Helvetica,sans-serif; background:#f8fafc; color:var(--ink); }
+.topbar { height:64px; background:var(--red); color:#fff; box-shadow:0 2px 7px rgba(0,0,0,.12); }
+.topbar-inner { max-width:1280px; height:100%; margin:auto; padding:0 16px; display:flex; align-items:center; justify-content:space-between; }
+.brand img { height:48px; max-width:112px; object-fit:contain; background:#fff; border-radius:7px; padding:5px; display:block; }
+.nav { display:flex; align-items:center; gap:24px; font-size:14px; }
+.nav>a { color:#ffd9dc; text-decoration:none; display:flex; align-items:center; gap:8px; }
+.nav>a:hover { color:#fff; }
+.nav-icon { width:17px; height:17px; display:inline-block; position:relative; }
+.wifi-icon { border:2px solid currentColor; border-left-color:transparent; border-right-color:transparent; border-bottom-color:transparent; border-radius:50%; transform:rotate(45deg); }
+.wifi-icon:after { content:""; position:absolute; width:5px; height:5px; border-radius:50%; background:currentColor; left:4px; bottom:-1px; }
+.home-icon { width:15px; height:13px; border:2px solid currentColor; border-top:0; margin-top:4px; }
+.home-icon:before { content:""; position:absolute; width:11px; height:11px; border-left:2px solid currentColor; border-top:2px solid currentColor; transform:rotate(45deg); left:1px; top:-7px; }
+.language { height:30px; display:flex; align-items:center; gap:5px; border:1px solid rgba(255,255,255,.48); border-radius:999px; padding:0 8px; font-size:11px; }
+.language button { border:0; background:transparent; color:#ffbdc2; cursor:pointer; padding:3px 1px; }
+.language button.active { color:#fff; font-weight:800; }
+.language span { color:#ffb1b7; }
+.offer-strip { height:42px; background:#111827; color:#fff; display:flex; align-items:center; justify-content:center; gap:9px; border-bottom:1px solid rgba(255,255,255,.1); text-transform:uppercase; font-size:12px; font-weight:800; letter-spacing:.04em; }
+.offer-pill { background:var(--red); border-radius:999px; padding:5px 9px; }
+.offer-strip b { color:#7b8493; }.offer-strip .desktop-only { color:#d1d5db; }
+main { max-width:1024px; margin:auto; padding:24px 16px 64px; }
+.hero { min-height:328px; border-radius:16px; position:relative; overflow:hidden; background:linear-gradient(135deg,#e30613 0%,#c90412 58%,#90030e 100%); color:#fff; box-shadow:0 5px 12px rgba(0,0,0,.12); }
+.hero-content { position:relative; z-index:2; padding:32px; }
+.partner-row { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+.partner-logo { height:52px; background:#fff; border-radius:11px; display:flex; align-items:center; padding:8px 12px; }
+.partner-logo img { height:34px; object-fit:contain; }.airtel-partner img { width:155px; }.starlink-partner img { width:96px; }
+.times { font-size:22px; color:#ffc9cd; font-weight:900; }
+.eyebrow { margin:0 0 12px; color:#ffcbd0; text-transform:uppercase; font-size:12px; line-height:1.2; letter-spacing:.19em; font-weight:800; }
+.hero h1 { margin:0 0 10px; font-size:51px; line-height:.98; letter-spacing:-.045em; max-width:760px; }
+.hero-lead { max-width:760px; margin:0; color:#ffd7da; font-size:17px; line-height:1.45; }
+.hero-note { margin:12px 0 0; color:#ffbec3; font-size:12px; }
+.hero-ring { position:absolute; width:255px; height:255px; right:-64px; bottom:-96px; border:28px solid rgba(255,196,201,.18); border-radius:50%; }
+.hero-dot { position:absolute; width:11px; height:11px; right:32px; bottom:32px; border-radius:50%; background:#fff; }
+.plans-section { margin-top:32px; }
+.plans-heading { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:16px; }
+.eyebrow.red { color:#e30613; margin-bottom:7px; }
+.plans-heading h2 { margin:0; font-size:24px; letter-spacing:-.02em; }
+.subheading { margin:4px 0 0; color:#667085; font-size14px; font-size:14px; }
+.service-status { display:flex; align-items:center; gap:8px; color:#16803c; font-size12px; font-weight:800; margin-bottom:3px; }
+.service-status i { width:8px; height:8px; border-radius:50%; background:#22c55e; }
+.plan-grid { max-width:840px; margin:0 auto; padding:8px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.plans-section { position:relative; }
+.plans-section--bundles { max-width:840px; margin:32px auto 0; padding:18px 22px 24px; border-radius:18px; background:linear-gradient(145deg,#95151c,#650d13); }
+.plans-section--bundles .plans-heading h2 { color:#fff; }
+.plans-section--bundles .plans-heading .eyebrow.red { color:#ffd0d3; }
+.plans-section--bundles .plans-heading .subheading { color:#f5c5c8; }
+.plan-card { position:relative; width:100%; min-width:0; min-height:300px; border:0; border-radius:24px; background:#fff; padding:18px 16px; text-align:center; font-family:inherit; cursor:pointer; transition:transform .2s ease,box-shadow .2s ease; }
+.plan-card:hover { transform:translateY(-3px); box-shadow:0 12px 24px rgba(30,0,0,.22); }
+.plan-card:focus-visible { outline:3px solid #f6b940; outline-offset:3px; }
+.plan-card.selected,.plan-card--featured { border:3px solid #f2bf4d; background:linear-gradient(145deg,#fffef9,#fff6df); box-shadow:0 0 0 1px rgba(242,191,77,.18),0 12px 24px rgba(170,31,31,.14); }
+.plan-card--unlimited { grid-column:2; min-height:300px; }
+.plan-main { position:relative; height:100%; min-height:262px; display:flex; flex-direction:column; align-items:center; }
+.plan-name { align-self:flex-start; margin:0 0 10px; color:#25252a; font-size:18px; font-weight:800; letter-spacing:-.02em; }
+.plan-network { color:#777; background:#f3f4f6; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:800; line-height:1.2; margin-bottom:10px; }
+.data-badge { display:flex; align-items:baseline; justify-content:center; gap:4px; color:#c4212c; background:#fff0f1; border-radius:16px; padding:7px 16px 9px; line-height:1; }
+.data-badge strong { font-size:clamp(56px,7vw,72px); font-weight:800; font-style:italic; letter-spacing:-.06em; }
+.data-badge span { font-size:clamp(16px,2.4vw,21px); font-weight:800; }
+.data-badge--unlimited strong { font-size:74px; line-height:.9; font-style:normal; letter-spacing:-.08em; }
+.plan-validity { margin-top:8px; color:#72727a; font-size:14px; font-weight:700; line-height:1.2; }
+.plan-divider { width:100%; height:1px; flex:none; margin:12px 0 10px; background:#eee; }
+.plan-price { color:#1e1e1e; line-height:1.2; }
+.plan-price strong { font-size:28px; font-weight:700; letter-spacing:-.03em; white-space:nowrap; }
+.choose { width:100%; min-height:44px; display:flex; align-items:center; justify-content:center; margin-top:auto; border-radius:18px; background:linear-gradient(145deg,#d21d2b,#ae1020); box-shadow:0 8px 16px rgba(184,20,34,.2); color:#fff; font-size:12px; font-weight:800; letter-spacing:.01em; white-space:nowrap; }
+.plan-tag { position:absolute; z-index:1; top:-4px; right:0; display:inline-flex; align-items:center; min-height:26px; border-radius:999px; padding:0 9px; background:#f3922e; box-shadow:0 4px 9px rgba(0,0,0,.14); color:#fff; font-size:10px; font-weight:800; white-space:nowrap; }
+.plan-card--tagged .plan-name { padding-right:74px; }
+.plan-card--tagged .plan-network { margin-top:0; }
+.how { margin-top:40px; min-height:180px; display:flex; align-items:flex-start; gap:16px; border-radius:16px; background:#111827; color:#fff; padding:28px; }
+.how-logo { flex:none; height:52px; background:#fff; border-radius:11px; padding:8px; }
+.how-logo img { width:80px; height:34px; object-fit:contain; }
+.eyebrow.red-light { color:#ffb1b7; margin-bottom:7px; }
+.how h2 { margin:0; font-size24px; }
+.how p:not(.eyebrow) { max-width:760px; margin:12px 0 0; color:#d1d5db; font-size14px; line-height:1.7; }
+.how small { display:block; margin-top:12px; color:#8d96a5; font-size12px; }
+footer { background:var(--blue); color:#aebfe7; padding:24px 16px 0; }
+.footer-grid { max-width:1024px; margin:auto; display:grid; grid-template-columns:repeat(3,1fr); gap:24px; padding-bottom:24px; }
+.footer-grid h3 { color:#fff; margin:0 0 16px; font-size16px; }.footer-grid p { margin:0 0 8px; font-size14px; }
+.copyright { max-width:1024px; margin:auto; border-top:1px solid #385895; padding:16px 0; text-align:center; color:#c3cde5; font-size14px; }
+.modal { position:fixed; z-index:50; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.6); backdrop-filter:blur(4px); padding:16px; }
+.modal.open { display:flex; }
+.modal-card { width:340px; max-width:100%; border-radius:16px; background:#fff; padding:32px; text-align:center; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+.spinner { width:72px; height:72px; margin:0 auto 14px; border:4px solid #e30613; border-top-color:transparent; border-radius:50%; animation:spin .8s linear infinite; }
+.modal-logos { display:flex; align-items:center; justify-content:center; gap:8px; }.modal-logos img { height:40px; max-width:95px; object-fit:contain; }.modal-logos span { color:#9ca3af; font-size22px; }
+.modal-card h2 { margin:16px 0 8px; font-size24px; }.modal-card p { color:#6b7280; margin:0; }.modal-card small { display:block; color:#9ca3af; margin-top:16px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+@media (max-width:640px) {
+  .topbar { height:64px; }.topbar-inner { padding:0 12px; }.brand img { height:44px; }
+  .nav { gap:8px; }.nav>a span:last-child { display:none; }.nav>a { padding:4px; }
+  .language { height:28px; }.offer-strip { height:38px; font-size10px; gap:6px; }.desktop-only,.offer-strip b { display:none; }
+  main { padding:16px 12px 48px; }.hero { min-height:328px; }.hero-content { padding:32px 16px 24px; }
+  .partner-row { margin-bottom:18px; }.partner-logo { height:52px; }.airtel-partner img { width:150px; }.starlink-partner img { width:90px; }
+  .eyebrow { font-size11px; }.hero h1 { font-size38px; line-height:1.02; }.hero-lead { font-size15px; }.hero-note { font-size11px; }
+  .plans-section { margin-top:24px; }.plans-heading h2 { font-size20px; }.subheading { font-size12px; }.service-status { display:none; }
+  .plans-section--bundles { width:calc(100% + 24px); margin:24px -12px 0; padding:18px 12px 24px; border-radius:0; }
+  .plan-grid { max-width:680px; padding:0; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+  .plan-card { min-height:230px; padding:12px 10px; border-radius:20px; }
+  .plan-main { min-height:202px; }
+  .plan-name { margin-bottom:8px; font-size:15px; }
+  .plan-network { margin-bottom:8px; padding:3px 8px; font-size:11px; }
+  .data-badge { border-radius:13px; padding:6px 12px 7px; }
+  .data-badge strong { font-size:clamp(46px,13vw,56px); }
+  .data-badge span { font-size:14px; }
+  .data-badge--unlimited strong { font-size:38px; }
+  .plan-validity { margin-top:6px; font-size:11px; }
+  .plan-divider { margin:8px 0 6px; }
+  .plan-price strong { font-size:clamp(20px,6vw,25px); }
+  .choose { min-height:36px; border-radius:16px; font-size:10px; }
+  .plan-tag { top:-3px; right:0; min-height:21px; padding:0 7px; font-size:9px; }
+  .plan-card--tagged .plan-name { padding-right:60px; }
+  .plan-card--unlimited { grid-column:1 / -1; min-height:230px; }
+  .how { margin-top:24px; padding:20px; }.how-logo { width:58px; }.how-logo img { width:42px; }.how h2 { font-size20px; }.how p:not(.eyebrow) { font-size13px; }
+  .footer-grid { grid-template-columns:1fr; gap:20px; }.footer-grid h3 { margin-bottom:10px; }
+}
