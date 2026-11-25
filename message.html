@@ -544,13 +544,13 @@
     });
 
     retryButton.addEventListener('click', function () {
-      window.location.href = 'trial.html';
+      window.location.href = 'trial.html?' + params.toString();
     });
 
     timeoutRetryButton.addEventListener('click', function () {
       sessionStorage.removeItem(READY_DEADLINE_KEY);
       sessionStorage.removeItem(READY_EXPIRED_KEY);
-      window.location.href = 'trial.html';
+      window.location.href = 'trial.html?' + params.toString();
     });
   </script>
 </body>
